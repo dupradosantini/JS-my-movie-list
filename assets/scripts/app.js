@@ -10,8 +10,33 @@ const confirmAddMovieButton = cancelAddMovieButton.nextElementSibling;
 
 const userInputs = addMovieModal.querySelectorAll("input");
 
+const entryTextSection = document.getElementById("entry-text");
+
 const movies = [];
 
+function updateUI(){
+    if (movies.length === 0){
+        entryTextSection.style.display = "block";
+    } else {
+        entryTextSection.style.display = "none";
+    }
+}
+
+function renderNewMovieElement (title, imageUrl, rating){
+    const newMovieElement = document.createElement('li');
+    newMovieElement.className = "movie-element";
+    newMovieElement.innerHTML = `
+        <div class="movie-element__image">
+            <img src="${imageUrl}" alt="${title}">
+        </div>
+        <div class="movie-element__info">
+            <h2>${title}</h2>
+            <p>${rating}/5 stars</p>
+        </div>
+    `;
+    const listRoot = document.getElementById('movie-list');
+    listRoot.append(newMovieElement);
+}
 
 function toggleMovieModal(){
     addMovieModal.classList.toggle("visible");
@@ -54,6 +79,8 @@ function addMovieHandler(){
     console.log(movies);
     toggleMovieModal();
     clearMovieInput();
+    renderNewMovieElement(newMovie.title, newMovie.image, newMovie.rating);
+    updateUI();
 }
 
 function backdropClickHandler(){ //Cancel by clicking on backdrop
