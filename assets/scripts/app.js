@@ -12,6 +12,8 @@ const userInputs = addMovieModal.querySelectorAll("input");
 
 const entryTextSection = document.getElementById("entry-text");
 
+const deleteMovieModal = document.getElementById("delete-modal");
+
 const movies = [];
 
 function updateUI(){
@@ -21,7 +23,8 @@ function updateUI(){
         entryTextSection.style.display = "none";
     }
 }
-function deleteMovieHandler(movieId){
+
+function deleteMovie(){
     let movieIndex = 0;
     for(const movie of movies){
         if(movie.id === movieId){
@@ -32,6 +35,17 @@ function deleteMovieHandler(movieId){
     movies.splice(movieIndex,1); //removes the item at movieIndex and replaces it by the next.
     const listRoot = document.getElementById('movie-list');
     listRoot.children[movieIndex].remove();
+}
+
+function closeMovieDeletionModal(){
+    toggleBackdrop();
+    deleteMovieModal.classList.remove('visible');
+}
+
+function deleteMovieHandler(movieId){
+    deleteMovieModal.classList.add('visible');
+    toggleBackdrop();
+    deleteMovie(movieId);
 }
 function renderNewMovieElement (id, title, imageUrl, rating){
     const newMovieElement = document.createElement('li');
@@ -50,8 +64,12 @@ function renderNewMovieElement (id, title, imageUrl, rating){
     listRoot.append(newMovieElement);
 }
 
-function toggleMovieModal(){
-    addMovieModal.classList.toggle("visible");
+function closeMovieModal(){
+    addMovieModal.classList.remove("visible");
+}
+
+function showMovieModal(){
+    addMovieModal.classList.add("visible");
     toggleBackdrop();
 }
 
@@ -66,7 +84,7 @@ function toggleBackdrop(){
 }
 
 function cancelAddMovieHandler(){ //Cancel button functionality
-    toggleMovieModal();
+    closeMovieModal();
     clearMovieInput();
 }
 
@@ -90,19 +108,21 @@ function addMovieHandler(){
     };
     movies.push(newMovie);
     console.log(movies);
-    toggleMovieModal();
+    closeMovieModal();
+    toggleBackdrop();
     clearMovieInput();
     renderNewMovieElement(newMovie.id, newMovie.title, newMovie.image, newMovie.rating);
     updateUI();
 }
 
 function backdropClickHandler(){ //Cancel by clicking on backdrop
-    toggleMovieModal();
+    closeMovieModal();
+    closeMovieDeletionModal();
 }
 
 
 
-startAddMovieButton.addEventListener("click", toggleMovieModal);
+startAddMovieButton.addEventListener("click", showMovieModal);
 backdrop.addEventListener("click", backdropClickHandler);
 cancelAddMovieButton.addEventListener("click", cancelAddMovieHandler);
 confirmAddMovieButton.addEventListener("click", addMovieHandler);
