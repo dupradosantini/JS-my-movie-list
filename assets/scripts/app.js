@@ -24,7 +24,7 @@ function updateUI(){
     }
 }
 
-function deleteMovie(){
+function deleteMovie(movieId){
     let movieIndex = 0;
     for(const movie of movies){
         if(movie.id === movieId){
@@ -38,15 +38,23 @@ function deleteMovie(){
 }
 
 function closeMovieDeletionModal(){
-    toggleBackdrop();
     deleteMovieModal.classList.remove('visible');
+    toggleBackdrop();
 }
 
 function deleteMovieHandler(movieId){
     deleteMovieModal.classList.add('visible');
     toggleBackdrop();
-    deleteMovie(movieId);
+    const cancelDeletionButton = deleteMovieModal.querySelector('.btn--passive');
+    const confirmDeletionButton = deleteMovieModal.querySelector('.btn--danger');
+
+    cancelDeletionButton.addEventListener("click", () => {
+        closeMovieDeletionModal();
+    });
+
+    confirmDeletionButton.addEventListener("click", deleteMovie.bind(null, movieId));
 }
+
 function renderNewMovieElement (id, title, imageUrl, rating){
     const newMovieElement = document.createElement('li');
     newMovieElement.className = "movie-element";
