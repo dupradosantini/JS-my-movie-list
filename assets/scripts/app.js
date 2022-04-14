@@ -21,8 +21,19 @@ function updateUI(){
         entryTextSection.style.display = "none";
     }
 }
-
-function renderNewMovieElement (title, imageUrl, rating){
+function deleteMovieHandler(movieId){
+    let movieIndex = 0;
+    for(const movie of movies){
+        if(movie.id === movieId){
+            break;
+        }
+        movieIndex++
+    }
+    movies.splice(movieIndex,1); //removes the item at movieIndex and replaces it by the next.
+    const listRoot = document.getElementById('movie-list');
+    listRoot.children[movieIndex].remove();
+}
+function renderNewMovieElement (id, title, imageUrl, rating){
     const newMovieElement = document.createElement('li');
     newMovieElement.className = "movie-element";
     newMovieElement.innerHTML = `
@@ -34,6 +45,7 @@ function renderNewMovieElement (title, imageUrl, rating){
             <p>${rating}/5 stars</p>
         </div>
     `;
+    newMovieElement.addEventListener("click", deleteMovieHandler.bind(null, id));
     const listRoot = document.getElementById('movie-list');
     listRoot.append(newMovieElement);
 }
@@ -71,6 +83,7 @@ function addMovieHandler(){
             return;
     }
     const newMovie = {
+        id: Math.random().toString(), //just for the sake of the example.
         title: titleValue,
         image: imgUrlValue,
         rating: ratinglValue
@@ -79,7 +92,7 @@ function addMovieHandler(){
     console.log(movies);
     toggleMovieModal();
     clearMovieInput();
-    renderNewMovieElement(newMovie.title, newMovie.image, newMovie.rating);
+    renderNewMovieElement(newMovie.id, newMovie.title, newMovie.image, newMovie.rating);
     updateUI();
 }
 
