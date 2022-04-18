@@ -35,22 +35,27 @@ function deleteMovie(movieId){
     movies.splice(movieIndex,1); //removes the item at movieIndex and replaces it by the next.
     const listRoot = document.getElementById('movie-list');
     listRoot.children[movieIndex].remove();
+    closeMovieDeletionModal();
+    updateUI();
 }
 
 function closeMovieDeletionModal(){
-    deleteMovieModal.classList.remove('visible');
     toggleBackdrop();
+    deleteMovieModal.classList.remove('visible');
 }
 
 function deleteMovieHandler(movieId){
     deleteMovieModal.classList.add('visible');
     toggleBackdrop();
     const cancelDeletionButton = deleteMovieModal.querySelector('.btn--passive');
-    const confirmDeletionButton = deleteMovieModal.querySelector('.btn--danger');
+    let confirmDeletionButton = deleteMovieModal.querySelector('.btn--danger');
 
-    cancelDeletionButton.addEventListener("click", () => {
-        closeMovieDeletionModal();
-    });
+    confirmDeletionButton.replaceWith(confirmDeletionButton.cloneNode(true));
+
+    confirmDeletionButton = deleteMovieModal.querySelector('.btn--danger');
+
+    cancelDeletionButton.removeEventListener('click', closeMovieDeletionModal);
+    cancelDeletionButton.addEventListener('click', closeMovieDeletionModal);
 
     confirmDeletionButton.addEventListener("click", deleteMovie.bind(null, movieId));
 }
@@ -93,6 +98,7 @@ function toggleBackdrop(){
 
 function cancelAddMovieHandler(){ //Cancel button functionality
     closeMovieModal();
+    toggleBackdrop();
     clearMovieInput();
 }
 
